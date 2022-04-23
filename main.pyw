@@ -1,4 +1,3 @@
-from turtle import update
 import PySimpleGUI as sg
 import json
 import requests
