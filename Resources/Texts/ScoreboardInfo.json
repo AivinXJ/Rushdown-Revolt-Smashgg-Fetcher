@@ -2,14 +2,14 @@
   "player": [
     {},
     {
-      "name": "taipo",
+      "name": "Player 1",
       "tag": "",
-      "character": "Urdah"
+      "character": "Seth"
     },
     {
-      "name": "BUBBY",
-      "tag": "",
-      "character": "Urdah"
+      "name": "Player 2",
+      "tag": "Tag",
+      "character": "Ezzie"
     },
     {
       "name": "",
@@ -39,8 +39,8 @@
   ],
   "score": [
     null,
-    "1",
-    "3"
+    1,
+    2
   ],
   "wl": [
     null,
@@ -49,19 +49,19 @@
   ],
   "gamemode": 1,
   "bestOf": "Bo5",
-  "round": "Winners Final",
-  "tournamentName": "BUBBY BEATDOWN 17 EU/NA",
+  "round": "Losers Finals",
+  "tournamentName": "A Tournament #123",
   "caster": [
     {},
     {
-      "name": "lol",
-      "twitter": "ha",
-      "twitch": "heheh"
+      "name": "Caster 1",
+      "twitter": "Twitter 1",
+      "twitch": "Twitch 1"
     },
     {
-      "name": "he",
-      "twitter": "ho",
-      "twitch": "hahaha"
+      "name": "Caster 2",
+      "twitter": "Twitter 2",
+      "twitch": "Twitch 2"
     }
   ],
   "allowIntro": false
