@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RR VS Screen</title>
+
+    <script src="Resources/Scripts/VS Screen.js" defer></script>
+    <script src="Resources/Scripts/gsap.min.js"></script>
+    
+
+    <style>
+
+        @font-face {
+            font-family: "BlackHole";
+            src: url('Resources/Fonts/BlackHoleBB.ttf');
+        }
+
+        @font-face {
+            font-family: "Vortex";
+            src: url('Resources/Fonts/VortexRising-Mod.ttf');
+        }
+
+        body {
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            background: transparent;
+            padding: 0px;
+            margin: 0px;
+            text-transform: uppercase;
+        }
+
+
+        .absol {
+            position: absolute;
+        }
+
+
+        .oneEighty {
+            width: 1920px;
+            height: 1080px;
+        }
+
+
+        #bgVid {
+            filter: grayscale(.8);
+        }
+
+
+
+        .character {
+            position: absolute;
+            object-fit: scale-down;
+            transform: scale(1.4);
+            top: 160px;
+        }
+        #charImgP1 {
+            left: 100px;
+        }
+        #charImgP2 {
+            right: 100px;
+        }
+        #charsLeft {
+            -webkit-mask-image: url("Resources/Overlay/VS\ Screen/Mask Left.png");
+        }
+        #charsRight {
+            -webkit-mask-image: url("Resources/Overlay/VS\ Screen/Mask Right.png");
+        }
+
+        .background {
+            position: absolute;
+            object-fit: scale-down;
+            transform: scale(1.75);
+            top: 335px;
+            opacity: .5;
+        }
+        #bgImgL {
+            left: 180px;
+        }
+        #bgImgR {
+            right: 180px;
+        }
+
+
+        .scores {
+            position: absolute;
+            top: 1008px;
+            filter: grayscale(1);
+            transition: filter 100ms;
+        }
+        #scoreL1 {
+            left: 227px;
+        }
+        #scoreL2 {
+            left: 186px;
+        }
+        #scoreL3 {
+            left: 123px;
+        }
+        #scoreR1 {
+            right: 227px;
+        }
+        #scoreR2 {
+            right: 186px;
+        }
+        #scoreR3 {
+            right: 123px;
+        }
+        #scores {
+            opacity: 0;
+        }
+
+        #lineL {
+            position: absolute;
+            bottom: 69px;
+            left: 123px;
+        }
+        #lineR {
+            position: absolute;
+            bottom: 69px;
+            right: 123px;
+        }
+
+
+        .wrappers {
+            position: absolute;
+            width: 840px;
+            height: 120px;
+            bottom: 40px;
+            line-height: 90px;
+            font-family: "Vortex";
+            text-align: center;
+            white-space: nowrap;
+            opacity: 0;
+            text-transform: uppercase;
+        }
+
+        #leftWrapper, #leftTeam {
+            left: 61px;
+        }
+
+        #rightWrapper, #rightTeam {
+            right: 61px;
+        }
+
+        .name {
+            -webkit-text-stroke-width: 4px;
+            -webkit-text-stroke-color: #fff;
+        }
+
+        .tag {
+            -webkit-text-stroke-width: 2px;
+            -webkit-text-stroke-color: #fff;
+        }
+
+        .gold {
+            color: #dfb017;
+        }
+        .purple {
+            color: #9e61ff;
+        }
+
+
+        .roundInfo {
+            position: absolute;
+            text-align: center;
+            font-family: "Vortex";
+        }
+
+        #round {
+            width: 559px;
+            height: 50px;
+            left: 680px;
+            top: 62px;
+            color: white;
+            line-height: 38px;
+        }
+
+        #tournament {
+            width: 465px;
+            height: 40px;
+            left: 727px;
+            top: 29px;
+            color: lightgray;
+            line-height: 28px;
+        }
+
+        #roundInfo {
+            opacity: 0;
+        }
+
+
+        .casterInfo {
+            position: absolute;
+            width: 240px;
+            height: 34px;
+            top: 132px;
+            font-family: "BlackHole";
+            color: white;
+            line-height: 26px;
+        }
+
+        #caster1 {
+            left: 695px;
+            text-align: right;
+        }
+
+        #caster2 {
+            right: 695px;
+        }
+
+
+        .socialBox {
+            position: absolute;
+            width: 240px;
+            height: 30px;
+            top: 157px;
+            font-family: "BlackHole";
+            color: lightgrey;
+            line-height: 26px;
+        }
+        .twitterIcon {
+            height: 22px;
+            width: 22px;
+            fill: lightgray;
+            transform: translate(0px, 2px);
+        }
+        .twitchIcon {
+            height: 17px;
+            width: 17px;
+            fill: lightgrey;
+            transform: translate(0px, 1px);
+        }
+
+        #twitter1Wrapper, #twitter2Wrapper {
+            opacity: 0;
+        }
+        #twitch1Wrapper, #twitch2Wrapper {
+            opacity: 0;
+        }
+
+        #twitter1Wrapper, #twitch1Wrapper {
+            text-align: right;
+            left: 710px;
+        }
+        #twitter2Wrapper, #twitch2Wrapper {
+            right: 710px;
+        }
+
+        #casterInfo {
+            opacity: 0;
+        }
+
+
+        .doubles, .trios {
+            display: none;
+        }
+
+        .slash {
+            font-size: 70px;
+            color: white;
+            font-family: "Vortex";
+        }
+
+        .absolR {
+            position: absolute;
+            right: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bgVid">
+        <video src="Resources/Overlay/VS Screen/bg.webm" autoplay loop class="absol"></video>
+    </div>
+
+    <div id="charas">
+        <div class="absol oneEighty" id="charsLeft">
+            <img class="background" id="bgImgL"/>
+            <div id="charP1" class="absol">
+                <img class="character" id="charImgP1"/>
+            </div>
+            <div id="charP3" class="absol doubles trios">
+                <img class="character" id="charImgP3"/>
+            </div>
+            <div id="charP5" class="absol trios">
+                <img class="character" id="charImgP5"/>
+            </div>
+        </div>
+
+        <div class="absol oneEighty" id="charsRight">
+            <img class="background" id="bgImgR"/>
+            <div id="charP2" class="absolR">
+                <img class="character" id="charImgP2"/>
+            </div>
+            <div id="charP4" class="absolR doubles trios">
+                <img class="character" id="charImgP4"/>
+            </div>
+            <div id="charP6" class="absolR trios">
+                <img class="character" id="charImgP6"/>
+            </div>
+        </div>
+    </div>
+
+    <img class="absol" id="separator">
+    <img src="Resources/Overlay/VS Screen/Grads.png" class="absol"/>
+    <img src="Resources/Overlay/VS Screen/VS Lightning.png" class="absol"/>
+
+    <div id="scores">
+        <div id="scoresLeft">
+            <img src="Resources/Overlay/VS Screen/Player Line.png" id="lineL">
+            <img id="scoreL1" class="scores" src="Resources/Overlay/VS Screen/Yellow sm.png">
+            <img id="scoreL2" class="scores" src="Resources/Overlay/VS Screen/Yellow sm.png">
+            <img id="scoreL3" class="scores" src="Resources/Overlay/VS Screen/Yellow lg.png">
+        </div>
+        <div id="scoresRight">
+            <img src="Resources/Overlay/VS Screen/Player Line.png" id="lineR">
+            <img id="scoreR1" class="scores" src="Resources/Overlay/VS Screen/Purple sm.png">
+            <img id="scoreR2" class="scores" src="Resources/Overlay/VS Screen/Purple sm.png">
+            <img id="scoreR3" class="scores" src="Resources/Overlay/VS Screen/Purple lg.png">
+        </div>
+    </div>
+
+    <div id="playerTexts">
+        <span id="leftTeam" class="name gold wrappers"></span>
+        <span id="leftWrapper" class="wrappers">
+            <span id="p1Tag" class="tag gold"></span>
+            <span id="p1Name" class="name gold"></span>
+            <span class="slash doubles trios" id="slashL1">/</span>
+            <span id="p3Tag" class="tag gold doubles trios"></span>
+            <span id="p3Name" class="name gold doubles trios"></span>
+            <span class="slash trios" id="slashL2">/</span>
+            <span id="p5Tag" class="tag gold trios"></span>
+            <span id="p5Name" class="name gold trios"></span>
+        </span>
+
+        <span id="rightTeam" class="name purple wrappers"></span>
+        <span id="rightWrapper" class="wrappers">
+            <span id="p2Tag" class="tag purple"></span>
+            <span id="p2Name" class="name purple"></span>
+            <span class="slash doubles trios" id="slashR1">/</span>
+            <span id="p4Tag" class="tag purple doubles trios"></span>
+            <span id="p4Name" class="name purple doubles trios"></span>
+            <span class="slash trios" id="slashR2">/</span>
+            <span id="p6Tag" class="tag purple trios"></span>
+            <span id="p6Name" class="name purple trios"></span>
+        </span>
+    </div>
+
+
+    <div id="roundInfo">
+        <img src="Resources/Overlay/VS Screen/Round BG.png" class="absol">
+        <span id="round" class="roundInfo"></span>
+        <span id="tournament" class="roundInfo"></span>
+    </div>
+
+    <div id="casterInfo">
+
+        <img src="Resources/Overlay/VS Screen/Caster BG.png" class="absol">
+
+        <span id="caster1" class="casterInfo"></span>
+        <span id="twitter1Wrapper" class="socialBox">
+            <span id="twitter1" class="socialText"></span>
+            <svg class="twitterIcon" viewBox="0 0 20 20">
+                <path d="M18.258,3.266c-0.693,0.405-1.46,0.698-2.277,0.857c-0.653-0.686-1.586-1.115-2.618-1.115c-1.98,0-3.586,1.581-3.586,3.53c0,0.276,0.031,0.545,0.092,0.805C6.888,7.195,4.245,5.79,2.476,3.654C2.167,4.176,1.99,4.781,1.99,5.429c0,1.224,0.633,2.305,1.596,2.938C2.999,8.349,2.445,8.19,1.961,7.925C1.96,7.94,1.96,7.954,1.96,7.97c0,1.71,1.237,3.138,2.877,3.462c-0.301,0.08-0.617,0.123-0.945,0.123c-0.23,0-0.456-0.021-0.674-0.062c0.456,1.402,1.781,2.422,3.35,2.451c-1.228,0.947-2.773,1.512-4.454,1.512c-0.291,0-0.575-0.016-0.855-0.049c1.588,1,3.473,1.586,5.498,1.586c6.598,0,10.205-5.379,10.205-10.045c0-0.153-0.003-0.305-0.01-0.456c0.7-0.499,1.308-1.12,1.789-1.827c-0.644,0.28-1.334,0.469-2.06,0.555C17.422,4.782,17.99,4.091,18.258,3.266"></path>
+            </svg>
+        </span>
+        <span id="twitch1Wrapper" class="socialBox">
+            <span id="twitch1" class="socialText"></span>
+            <svg class="twitchIcon" viewBox="0 0 24 24">
+                <path d="m.975 4.175v16.694h5.749v3.131h3.139l3.134-3.132h4.705l6.274-6.258v-14.61h-21.434zm3.658-2.09h17.252v11.479l-3.66 3.652h-5.751l-3.134 3.127v-3.127h-4.707z"/>
+                <path d="m10.385 6.262h2.09v6.26h-2.09z"/>
+                <path d="m16.133 6.262h2.091v6.26h-2.091z"/>
+            </svg>
+        </span>
+
+
+        <span id="caster2" class="casterInfo"></span>
+        <span id="twitter2Wrapper" class="socialBox">
+            <svg class="twitterIcon" id="twitterIcon" viewBox="0 0 20 20">
+                <path d="M18.258,3.266c-0.693,0.405-1.46,0.698-2.277,0.857c-0.653-0.686-1.586-1.115-2.618-1.115c-1.98,0-3.586,1.581-3.586,3.53c0,0.276,0.031,0.545,0.092,0.805C6.888,7.195,4.245,5.79,2.476,3.654C2.167,4.176,1.99,4.781,1.99,5.429c0,1.224,0.633,2.305,1.596,2.938C2.999,8.349,2.445,8.19,1.961,7.925C1.96,7.94,1.96,7.954,1.96,7.97c0,1.71,1.237,3.138,2.877,3.462c-0.301,0.08-0.617,0.123-0.945,0.123c-0.23,0-0.456-0.021-0.674-0.062c0.456,1.402,1.781,2.422,3.35,2.451c-1.228,0.947-2.773,1.512-4.454,1.512c-0.291,0-0.575-0.016-0.855-0.049c1.588,1,3.473,1.586,5.498,1.586c6.598,0,10.205-5.379,10.205-10.045c0-0.153-0.003-0.305-0.01-0.456c0.7-0.499,1.308-1.12,1.789-1.827c-0.644,0.28-1.334,0.469-2.06,0.555C17.422,4.782,17.99,4.091,18.258,3.266"></path>
+            </svg>
+            <span id="twitter2" class="twitterInfo"></span>
+        </span>
+        <span id="twitch2Wrapper" class="socialBox">
+            <svg class="twitchIcon" viewBox="0 0 24 24">
+                <path d="m.975 4.175v16.694h5.749v3.131h3.139l3.134-3.132h4.705l6.274-6.258v-14.61h-21.434zm3.658-2.09h17.252v11.479l-3.66 3.652h-5.751l-3.134 3.127v-3.127h-4.707z"/>
+                <path d="m10.385 6.262h2.09v6.26h-2.09z"/>
+                <path d="m16.133 6.262h2.091v6.26h-2.091z"/>
+            </svg>
+            <span id="twitch2" class="socialText"></span>
+        </span>
+
+    </div>
+
+</body>
+</html>
