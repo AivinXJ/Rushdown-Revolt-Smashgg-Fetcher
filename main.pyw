@@ -4,7 +4,7 @@ import requests
 import os
 import math
 from PIL import Image, ImageOps
-
+import random
 
 if not os.path.exists("Results"):
     os.makedirs("Results")
@@ -12,9 +12,7 @@ if not os.path.exists("Results"):
 if not os.path.exists("Resources/Texts"):
     os.makedirs("Resources/Texts")
 
-sg.theme('DarkRed2')
-
-
+sg.theme('Topanga')
 
 RRCHARS = ["Afi and Galu", "Ashani", "Ezzie", "Kidd", "Raymer", "Weishan", "Urdah", "Zhurong", "Seth", "Velora"]
 CHARACTERS_ID = ["1756", "1757", "1758", "1759", "1760", "1761", "1762", "1763", "1844", "1875"]
@@ -42,9 +40,10 @@ layout = [  [sg.Text('Smashgg API Key')],
             [sg.Text('Set ID')],
             [sg.InputText(justification='c', key='set_id')],
             [],
-            # [sg.Text('Characters/Legends')],
-            # [sg.Text("Player 1's Character"), sg.Text("Player 2's Character")],
-            # [sg.Combo(values=RRCHARS, key='PLAYER1', readonly=True), sg.Combo(values=RRCHARS, key='PLAYER2', readonly=True)],
+            [sg.Checkbox("Manually Choose Characters", enable_events=True, default=True ,key='manual_chars')],
+            [sg.Text("Player 1's Character"), sg.Text("Player 2's Character")],
+            [sg.Combo(values=RRCHARS, key='PLAYER1', readonly=True), sg.Combo(values=RRCHARS, key='PLAYER2', readonly=True)],
+            [],
             [sg.Checkbox("Mirror Left Image", default=True, key='mirror_left'), sg.Checkbox("Mirror Right Image", default=False, key='mirror_right')],
             [sg.Radio('Use Default Images', 'img_types', default=True, key='use_default'), sg.Radio('Use Poster Images', 'img_types', key='use_poster'), sg.Radio('Use Mini Menu Images', 'img_types', key='use_minimenu'), sg.Radio('Use CSS Images', 'img_types', key='use_css')],            
             [sg.Radio('Update Scoreboard/VS Screen and Write Files', group_id='updater', default=True, key='update_all', enable_events=True), sg.Radio('Update Scoreboard/VS Screen Only', group_id='updater', key='update_scoreboard_only', enable_events=True), sg.Radio('Write Files Only', group_id='updater', key='update_files_only', enable_events=True)],
@@ -58,7 +57,7 @@ layout = [  [sg.Text('Smashgg API Key')],
             [sg.Button('Fetch Results')]]
 
 
-window = sg.Window('Rushdown Revolt SGG Fetcher v1.1.0', layout, element_justification='c')
+window = sg.Window('Rushdown Revolt SGG Fetcher v1.1.1', layout, element_justification='c')
 
 def update_chars(char1, char2):
 
@@ -116,6 +115,13 @@ while True:
     if event == sg.WIN_CLOSED:
         break
 
+    if values['manual_chars']:
+        window['PLAYER1'].update(disabled=False)
+        window['PLAYER2'].update(disabled=False)
+    else:
+        window['PLAYER1'].update(disabled=True)
+        window['PLAYER2'].update(disabled=True)    
+
     # Disable Character Settings if on scoreboard_only mode
     if values['update_scoreboard_only']:
         disabled_state = True
@@ -146,6 +152,9 @@ while True:
                 }}
                 games {{
                 selections {{
+                    entrant {{
+                        name
+                    }}
                     selectionValue
                 }}
                 }}
@@ -195,11 +204,24 @@ while True:
 
                 else:
                     left_full_name = data['data']['set']['slots'][0]['entrant']['name']
-                    left_score = data['data']['set']['slots'][0]['standing']['stats']['score']['value']
+
+                    #Fix None score to 0
+                    if data['data']['set']['slots'][0]['standing']['stats']['score']['value'] == None:
+                        left_score = 0
+                    else:
+                        left_score = data['data']['set']['slots'][0]['standing']['stats']['score']['value']
+
                     left_gamertag = data['data']['set']['slots'][0]['entrant']['participants'][0]['gamerTag']
 
                     right_full_name = data['data']['set']['slots'][1]['entrant']['name']
-                    right_score = data['data']['set']['slots'][1]['standing']['stats']['score']['value']
+                    
+                    
+                    #Fix None score to 0
+                    if data['data']['set']['slots'][1]['standing']['stats']['score']['value'] == None:
+                        right_score = 0
+                    else:
+                        right_score = data['data']['set']['slots'][1]['standing']['stats']['score']['value']
+                    
                     right_gamertag = data['data']['set']['slots'][1]['entrant']['participants'][0]['gamerTag']
                     
             
@@ -228,29 +250,51 @@ while True:
                     twitter_2 = values['twitter_2']
                     
                     if data['data']['set']['games'] != None:
-                        left_character = get_character_from_id(data['data']['set']['games'][-1]['selections'][0]['selectionValue'])
-                        right_character = get_character_from_id(data['data']['set']['games'][-1]['selections'][1]['selectionValue'])
+                        if data['data']['set']['games'][-1]['selections'][0]['entrant']['name'] == left_full_name:
+                            left_character = get_character_from_id(data['data']['set']['games'][-1]['selections'][0]['selectionValue'])
+                            right_character = get_character_from_id(data['data']['set']['games'][-1]['selections'][1]['selectionValue'])
+                        else:
+                            left_character = get_character_from_id(data['data']['set']['games'][-1]['selections'][1]['selectionValue'])
+                            right_character = get_character_from_id(data['data']['set']['games'][-1]['selections'][0]['selectionValue'])
                     else:
                         left_character, right_character = "Random", "Random"
-
+                    
+                    if values['manual_chars']:
+                        if values['PLAYER1'] == '':
+                            sg.popup_error("Error", "Player 1's Character is empty", "Character won't be changed")
+                            with open('Resources/Texts/ScoreboardInfo.json', 'r') as f:
+                                left_character = json.loads(f.read())['player'][1]['character']
+                        else:
+                            left_character = values['PLAYER1']
+                        
+                        if values['PLAYER2'] == '':
+                            sg.popup_error("Error", "Player 2's Character is empty", "Character won't be changed")
+                            with open('Resources/Texts/ScoreboardInfo.json', 'r') as f:
+                                right_character = json.loads(f.read())['player'][2]['character']
+                        else:
+                            right_character = values['PLAYER2']
 
                     if values['update_all'] or values['update_scoreboard_only']:
                         with open('Resources/Texts/ScoreboardInfo.json', 'w') as f:
-                            if set_name == 'Grand Final' or set_name == 'Grand Final Reset':
-                                wl_list = [None, 'W', 'L']
-                            else:
-                                wl_list = [None, 'Nada', 'Nada']
+                            # if set_name == 'Grand Final' or set_name == 'Grand Final Reset':
+                            #     wl_list = [None, 'W', 'L']
+                            # else:
+                            #     wl_list = [None, 'Nada', 'Nada']
+                            
+                            wl_list = [None, 'Nada', 'Nada']
 
                             if data['data']['set']['games'] == None:
                                 if left_score == -1:
                                     left_gamertag = f"{left_gamertag} [DQ]"
                                     left_prefix = ""
                                     right_score = math.ceil(best_of / 2)
+                                    left_score = 0
 
                                 if right_score == -1:
                                     right_gamertag = f"[DQ] {right_gamertag}"
                                     right_prefix = ""
                                     left_score = math.ceil(best_of / 2)
+                                    right_score = 0
                             
                             score_list = [None, str(left_score), str(right_score)]
 
@@ -315,8 +359,5 @@ while True:
                             f.write(twitter_2)
                         with open('Results/twitch2.txt', 'w') as f:
                             f.write(twitch_2)
-                         
-
-                    
 
 window.close()
